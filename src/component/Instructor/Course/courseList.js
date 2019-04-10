@@ -7,7 +7,7 @@ import 'antd/dist/antd.css';
 
 import * as courseAction from '../../../action/CourseAction';
 import * as cartAction from '../../../action/cartAction';
-import path from '../../../path';
+import path from '../../../path';   
 
 class CourseList extends Component {
     constructor(props) {

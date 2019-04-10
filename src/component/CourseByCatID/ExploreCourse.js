@@ -150,6 +150,7 @@ class ExploreCourse extends Component {
                             else {
                                 btn = <Button id="addCart" color="danger" style={{ fontSize: "x-medium" }} outline onClick={this.btnAddCart.bind(this)}>Add To Cart</Button>
                             }
+                            return null
                         })
                     }
                     else {

@@ -17,7 +17,6 @@ import { withRouter } from "react-router-dom";
 
 import Login from '../Login/login';
 import Register from '../Register/register';
-// import Search from '../Search/liveSearch';
 
 import cart from "../../assets/images/addToCarts.png";
 import category from "../../assets/images/category.png";
@@ -30,6 +29,7 @@ import * as cartAction from '../../action/cartAction';
 import * as courseAction from '../../action/CourseAction';
 import '../../styling.css'
 let cartTotal = 0;
+
 class Header extends Component {
     constructor(props) {
         super(props);
@@ -215,7 +215,6 @@ class Header extends Component {
                                     {searchResult}
                                 </div>
                             </NavItem>
-
                         </Nav>
                         <Nav className="ml-auto" navbar>
                             <NavItem>
