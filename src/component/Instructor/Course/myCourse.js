@@ -77,7 +77,7 @@ class MyCourse extends Component {
             <div>
                 <h3 className="marginTop">My Courses</h3>
                 <Container>
-                    <Button color="danger" className="btnnewcourse" outline onClick={this.btnNewCourse.bind(this)}>New Course</Button>
+                    <Button color="danger" className="btnnewcourse" onClick={this.btnNewCourse.bind(this)}>Add New Course</Button>
                 </Container>
                 <br />
                 <Container className="cnt">

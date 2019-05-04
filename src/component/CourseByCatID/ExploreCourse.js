@@ -120,10 +120,6 @@ class ExploreCourse extends Component {
 
     render() {
         let boughtCourseId = [];
-
-
-
-
         let course = "";
         if (this.props.course) {
             this.props.course.map(cdata => {

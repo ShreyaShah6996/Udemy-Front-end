@@ -10,7 +10,6 @@
 
 .Btnstyle {
     float: left;
-    margin-top: 20px;
     margin-left: 10%
 }
 
@@ -49,11 +48,11 @@
 
 .cat {
     display: inline;
-    margin-left: 5px;
+    margin-left: -2px;
 }
 
 .display {
-    display: inline
+    display: inline;
 }
 
 .ddtoggle {
@@ -104,11 +103,11 @@
 
 .column {
     width: 250px;
-    margin-left: 30px;
+    /* margin-left: 30px; */
 }
 
 .card {
-    width: 250px;
+    width: 100%;
     height: 330px;
 }
 
@@ -118,12 +117,12 @@
 
 .imgCard {
     width: 100%;
-    height: 150px
+    height: 150px;
 }
 
 .btnBack {
-    margin-left: 40px;
-    margin-top: 20px;
+    margin-left: 132px;
+    margin-top: 40px;
 }
 
 .cursor {
@@ -241,13 +240,13 @@
 }
 
 .mar {
-    margin-top: 30px;
+    margin-top: 20px;
     margin-right: 15px
 }
 
 .addCart {
     float: right;
-    margin-top: 30px;
+    margin-top: 20px;
     margin-right: 15px
 }
 
@@ -262,12 +261,11 @@
 }
 
 .btnnewcourse {
-    margin-top: 30px;
     float: left;
 }
 
 .cnt {
-    margin-top: 60px;
+    margin-top: 30px;
 }
 
 .loginmodel {
@@ -285,9 +283,12 @@
 
 .searchResult {
     position: absolute;
-    width: 95%;
-    background-color: whitesmoke;
+    width: 90%;
+    background-color: bisque;
     z-index: 2;
+    margin-top: 6px;
+    color: midnightblue;
+    margin-left: 11px;
 }
 
 .inp {

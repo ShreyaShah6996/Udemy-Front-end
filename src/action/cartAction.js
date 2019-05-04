@@ -1,10 +1,10 @@
 import * as cartService from '../service/cartService';
-import { FAILED, ADD_TO_CART, GET_CART_BY_USER, DELETE_FROM_CART, BUY_COURSE,GET_BOUGHT_COURSE_BY_USER } from '../reducer/cartReducer';
+import { FAILED, ADD_TO_CART, GET_CART_BY_USER, DELETE_FROM_CART, BUY_COURSE, GET_BOUGHT_COURSE_BY_USER } from '../reducer/cartReducer';
 
-export const addToCart = (data) => {
-    return (dispatch) => {
+export const addToCart = (data) => {    
+    return (dispatch) => {        
         cartService.addToCart(data)
-            .then((response) => {
+            .then((response) => {                
                 if (response.status === 200) {
                     dispatch({
                         type: ADD_TO_CART,
@@ -13,7 +13,7 @@ export const addToCart = (data) => {
                 }
             })
             .catch((error) => {
-                if (error) {
+                if (error) {                    
                     dispatch({
                         type: FAILED,
                         data: { error_msg: error.response.data.message }
@@ -45,10 +45,10 @@ export const getCartByUser = (userId) => {
     }
 };
 
-export const removeFromCart = (cartId) => {
+export const removeFromCart = (cartId) => {    
     return (dispatch) => {
         cartService.removeFromCart(cartId)
-            .then((response) => {
+            .then((response) => {                
                 if (response.status === 200) {
                     dispatch({
                         type: DELETE_FROM_CART,
@@ -57,7 +57,7 @@ export const removeFromCart = (cartId) => {
                 }
             })
             .catch((error) => {
-                if (error) {
+                if (error) {                    
                     dispatch({
                         type: FAILED,
                         data: { error_msg: error.response.data.message }

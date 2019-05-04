@@ -6,4 +6,4 @@ const BaseService = axios.create(
     }
 );
 
-export default BaseService;
+export default BaseService; 

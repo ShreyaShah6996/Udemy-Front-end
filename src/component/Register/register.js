@@ -29,6 +29,7 @@ class Register extends Component {
     }
 
     inputChangeHandler(e) {
+        this.setState({ fieldsErrors: { fullname: '', email: '', password: '' }, })
         const name = e.target.name;
         const value = e.target.value;
         if (name === "role") {
@@ -61,7 +62,7 @@ class Register extends Component {
                 ...this.state.fieldsErrors,
                 password: "* Password Required"
             }
-        } else if (this.state.password.trim().length < 6) {
+        } else if (this.state.password.length < 6) {
             fieldsErrors = {
                 ...this.state.fieldsErrors,
                 password: "* Password must contain minimum 6 characters"
@@ -132,7 +133,7 @@ class Register extends Component {
                         </Form>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="danger" block onClick={this.btnRegisterClick.bind(this)} >Sign Up</Button>
+                        <Button color="danger" block onClick={this.btnRegisterClick.bind(this)}>Sign Up</Button>
                     </ModalFooter>
                     <center>Already have an account?<span className="signuplink" onClick={this.props.toggleModals}> Log In</span></center>
                     <br />

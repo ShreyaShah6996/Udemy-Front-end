@@ -26,7 +26,7 @@ class Login extends Component {
             else if (err_msg === "") {
                 if (this.props.isOpen) {
                     this.props.toggle();
-                    // this.props.history.push('/courseList');
+                    this.props.history.push('/courseList');
                 }
             }
         }
@@ -40,6 +40,7 @@ class Login extends Component {
     }
 
     btnLoginClick(e) {
+        debugger
         e.preventDefault();
         let fieldsErrors = {};
         if (this.state.password === "") {
@@ -47,7 +48,7 @@ class Login extends Component {
                 ...this.state.fieldsErrors,
                 password: "* Password Required"
             }
-        } else if (this.state.password.trim().length < 6) {
+        } else if (this.state.password.length < 6) {
             fieldsErrors = {
                 ...this.state.fieldsErrors,
                 password: "* Password must contain minimum 6 characters"

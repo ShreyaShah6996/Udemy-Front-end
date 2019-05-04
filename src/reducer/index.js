@@ -7,5 +7,6 @@ import course from './CourseReducer';
 import cart from './cartReducer';
 import ratings from './ratingsReducer';
 import chapter from './chapterReducer';
+import wishlist from './wishlistReducer';
 
-export default combineReducers({ auth, category, subcategory, course, cart, ratings, chapter });
+export default combineReducers({ auth, category, subcategory, course, cart, ratings, chapter, wishlist });

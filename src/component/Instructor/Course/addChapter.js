@@ -39,8 +39,7 @@ class AddChapter extends Component {
         });
     }
 
-    checkMimeType = (data) => {
-        debugger
+    checkMimeType = (data) => {        
         let files = data;
         let err = '';
         const types = ['image/png', 'image/jpeg', 'image/gif', 'video/mp4', 'application/pdf', 'text/plain']
@@ -87,8 +86,7 @@ class AddChapter extends Component {
             const formData = new FormData();
             formData.append('chapterName', this.state.chapterName);
             formData.append('courseId', params.courseId);
-            if (this.checkMimeType(this.state.files)) {
-                debugger
+            if (this.checkMimeType(this.state.files)) {                
                 for (var i = 0; i < this.state.files.length; i++) {
                     formData.append('files', this.state.files[i]);
                 }

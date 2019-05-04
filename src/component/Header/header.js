@@ -1,33 +1,24 @@
 import React, { Component } from 'react';
-import {
-    Collapse,
-    Navbar,
-    NavbarToggler,
-    NavbarBrand,
-    Nav,
-    NavItem,
-    NavLink,
-    Button,
-    Input, InputGroup, InputGroupAddon,
-    Dropdown, DropdownToggle, DropdownMenu, DropdownItem
-} from 'reactstrap';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Button, Input, InputGroup, InputGroupAddon, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import { withRouter } from "react-router-dom";
 
-import Login from '../Login/login';
-import Register from '../Register/register';
-
 import cart from "../../assets/images/addToCarts.png";
-import category from "../../assets/images/category.png";
 import Logo from '../../assets/images/Udemy.png';
 import search from '../../assets/images/search.png';
+import wishlist from '../../assets/images/wishlist.png';
+
+import Login from '../Login/login';
+import Register from '../Register/register';
 
 import * as catAction from '../../action/categoryAction';
 import * as authAction from "../../action/authAction";
 import * as cartAction from '../../action/cartAction';
 import * as courseAction from '../../action/CourseAction';
-import '../../styling.css'
+import * as wishlistAction from '../../action/wishlistAction'
+import '../../styling.css';
+
 let cartTotal = 0;
 
 class Header extends Component {
@@ -41,7 +32,8 @@ class Header extends Component {
             dropdownOpen: false,
             ddlogoutopen: false,
             query: '',
-            result: []
+            result: [],
+            localCart: false
         };
 
         this.toggle = this.toggle.bind(this);
@@ -54,14 +46,24 @@ class Header extends Component {
     componentDidMount() {
         this.props.action.category.getCategory();
         this.props.action.course.getCourse();
-
     }
+
     componentWillMount() {
         if (this.props.userId) {
             this.props.action.cart.getCartByUser(this.props.userId);
+            this.props.action.wishlist.getWishlistByUser(this.props.userId);
         }
         else if (localStorage.getItem("cart")) {
-            cartTotal = JSON.parse(localStorage.getItem("cart")).length;
+            cartTotal = JSON.parse(localStorage.getItem("cart")).length;           
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps !== this.props) {
+            if (localStorage.getItem("cart")) {
+                cartTotal = JSON.parse(localStorage.getItem("cart")).length;
+                this.setState({ localCart: true })
+            }
         }
     }
 
@@ -72,6 +74,7 @@ class Header extends Component {
     }
 
     toggleLogin() {
+        debugger
         this.setState(prevState => ({
             LoginModal: !prevState.LoginModal
         }));
@@ -112,12 +115,18 @@ class Header extends Component {
         this.props.history.push('/myCourse');
     }
 
+    btnWishlist(e) {
+        e.preventDefault();
+        this.props.history.push('/wishlist');
+    }
+
     btnCart(e) {
         e.preventDefault();
         this.props.history.push('/cart');
     }
 
     btnLogout(e) {
+        debugger
         this.props.action.auth.logoutUser();
         this.props.history.push('/');
     }
@@ -135,12 +144,10 @@ class Header extends Component {
         }
     }
 
-
     onSelect(cid, e) {
         this.props.action.category.getCourseByCID(cid);
         this.props.history.push('/courseCID');
     }
-
 
     getSearchData() {
         let a = [];
@@ -165,8 +172,13 @@ class Header extends Component {
     }
 
     render() {
+        // console.log("",this.state);
         const { result } = this.state;
         let searchResult = [];
+        let token = this.props.token;
+        let role = parseInt(this.props.Role);
+        let categories = "";
+
         if (result && result.length > 0) {
             result.map((res, i) => {
                 return searchResult.push(
@@ -175,9 +187,6 @@ class Header extends Component {
             })
         }
 
-        let token = this.props.token;
-        let role = parseInt(this.props.Role);
-        let categories = "";
         if (this.props.category) {
             categories = this.props.category.map(cat => {
                 return <DropdownItem key={cat.id} onClick={this.onSelect.bind(this, cat.id)}>{cat.name}</DropdownItem>
@@ -196,8 +205,6 @@ class Header extends Component {
                         <Nav>
                             <NavItem>
                                 <NavLink>
-                                    <img src={category} alt="category" className="cat" height="20px" width="20px" />
-                                    {' '}
                                     <Dropdown isOpen={this.state.dropdownOpen} toggle={this.DropDownToggle} className="display" >
                                         <DropdownToggle style={{ background: "white", color: " black" }} caret>Categories </DropdownToggle>
                                         <DropdownMenu>
@@ -230,15 +237,26 @@ class Header extends Component {
                             <NavItem className="navItem">
                                 <NavLink href="/" className="navLink">
                                     <img src={cart} alt="Cart" className="cartimage" onClick={this.btnCart.bind(this)} />
-                                    {this.props.token ?
+                                    {/* {this.props.token ?
                                         <span className="totalcart">
-                                            <b>{this.props.getCart.length}</b>
+                                            <b style={{ padding: "3px" }}>{this.props.getCart.length}</b>
                                         </span> :
                                         <span className="totalcart">
-                                            <b>{cartTotal}</b>
+                                            <b style={{ padding: "3px" }}>{cartTotal}</b>
                                         </span>
-                                    }
+                                    } */}
                                 </NavLink>
+                                {this.props.token ?
+                                    <div>
+                                        <NavLink style={{ marginTop: "-40px", marginLeft: "59px" }}>
+                                            <img src={wishlist} height="20px" width="22px" alt="wishlist" style={{ marginLeft: "15px" }} onClick={this.btnWishlist.bind(this)} />
+                                        </NavLink>
+                                        <span style={{ color: "red", borderRadius: "50%", background: "pink", float: "right", marginTop: "-36px", marginRight: "-7px" }} >
+                                            <b style={{ padding: "3px" }}>{this.props.wishlist.length}</b>
+                                        </span></div>
+                                    : null
+                                }
+
                             </NavItem>
                             <NavItem>
                                 {!token ?
@@ -271,9 +289,9 @@ const mapStateToProps = state => {
         Role: state.auth.Role,
         getCart: state.cart.getCart,
         userId: state.auth.userId,
-        totalCart: state.cart.totalCart,
         course: state.course.course,
-        getCourse: state.course.getCourseByCid
+        getCourse: state.course.getCourseByCid,
+        wishlist: state.wishlist.wishlist
     }
 }
 
@@ -282,7 +300,8 @@ const mapDispatchToProps = (dispatch) => ({
         category: bindActionCreators(catAction, dispatch),
         auth: bindActionCreators(authAction, dispatch),
         cart: bindActionCreators(cartAction, dispatch),
-        course: bindActionCreators(courseAction, dispatch)
+        course: bindActionCreators(courseAction, dispatch),
+        wishlist: bindActionCreators(wishlistAction, dispatch)
     }
 })
 

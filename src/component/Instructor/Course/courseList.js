@@ -7,20 +7,19 @@ import 'antd/dist/antd.css';
 
 import * as courseAction from '../../../action/CourseAction';
 import * as cartAction from '../../../action/cartAction';
-import path from '../../../path';   
+import path from '../../../path';
 
 class CourseList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            imageModal: false,
-            videoModal: false,
+            // imageModal: false,
+            // videoModal: false,
             courseId: 0,
-            visible: false
+            addToCartFlag: false
         };
-        this.toggleImage = this.toggleImage.bind(this);
-        this.toggleVideo = this.toggleVideo.bind(this);
-        this.onDismiss = this.onDismiss.bind(this);
+        // this.toggleImage = this.toggleImage.bind(this);
+        // this.toggleVideo = this.toggleVideo.bind(this);
     }
 
     componentDidMount() {
@@ -31,23 +30,19 @@ class CourseList extends Component {
         this.props.action.course.getCourse();
     }
 
-    toggleImage(courseId, e) {
-        this.setState(prevState => ({
-            imageModal: !prevState.imageModal,
-            courseId: courseId
-        }));
-    }
+    // toggleImage(courseId, e) {
+    //     this.setState(prevState => ({
+    //         imageModal: !prevState.imageModal,
+    //         courseId: courseId
+    //     }));
+    // }
 
-    onDismiss() {
-        this.setState({ visible: !this.state.visible });
-    }
-
-    toggleVideo(courseId, e) {
-        this.setState(prevState => ({
-            videoModal: !prevState.videoModal,
-            courseId: courseId
-        }));
-    }
+    // toggleVideo(courseId, e) {
+    //     this.setState(prevState => ({
+    //         videoModal: !prevState.videoModal,
+    //         courseId: courseId
+    //     }));
+    // }
 
     btnNewCourse(e) {
         e.preventDefault();
@@ -61,6 +56,7 @@ class CourseList extends Component {
     };
 
     btnAddToCart(courseId, e) {
+        e.preventDefault();
         let cartData = [];
         let data = {
             userId: parseInt(this.props.userId),
@@ -76,6 +72,7 @@ class CourseList extends Component {
             }
             cartData.push({ courseId: courseId });
             localStorage.setItem("cart", JSON.stringify(cartData));
+            this.setState({ addToCartFlag: true });
         }
         this.openNotificationWithIcon('success', "Successfully added to cart");
     }
@@ -87,8 +84,15 @@ class CourseList extends Component {
     }
 
     btnGoCart(e) {
+        e.preventDefault();
         this.props.history.push('/cart');
     }
+
+    // formatPrice(price) {
+    //     console.log(price);
+    //     let courseprice = price.toFixed(2).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,")
+    //     return "₹ " + courseprice.split('.')[0]
+    // }
 
     renderMedia(course) {
         let addedToCart = true;
@@ -141,15 +145,17 @@ class CourseList extends Component {
                         <Media heading>{course.coursename}</Media>
                         <Rate allowHalf defaultValue={course.ratings} disabled />
                     </Media>
-                    <Media right>
-                        <Button className="mar" outline onClick={this.btnExplore.bind(this, course.id)}>Explore</Button>
-                        {bought ? "" :
-                            ((addedToCart && loginCart) ?
-                                <Button className="addCart" outline onClick={this.btnAddToCart.bind(this, course.id)} >Add To Cart</Button>
-                                : <Button className="addCart" outline onClick={this.btnGoCart.bind(this)}>Go to Cart</Button>)
-                        }
-
-                    </Media>
+                    <div>
+                        <Media right>
+                            <Button className="mar" outline onClick={this.btnExplore.bind(this, course.id)}>Explore</Button>
+                            {bought ? "" :
+                                ((addedToCart && loginCart) ?
+                                    <Button className="addCart" outline onClick={this.btnAddToCart.bind(this, course.id)} >Add To Cart</Button>
+                                    : <Button className="addCart" outline onClick={this.btnGoCart.bind(this)}>Go to Cart</Button>)
+                            }
+                        </Media>
+                        <Media style={{ justifyContent: "flex-end", marginTop: "10px", marginRight: "30px" }}><b> ₹ {course.price} </b></Media>
+                    </div>
                 </Media>
             </div >
         )

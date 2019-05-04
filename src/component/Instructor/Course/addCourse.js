@@ -18,14 +18,15 @@ class AddCourse extends Component {
             description: "",
             catId: 0,
             subcatId: 0,
-            fieldsErrors: { coursename: '', description: '', catMsg: "", subcatMsg: "" },
+            price: 0,
+            fieldsErrors: { coursename: '', description: '', catMsg: "", subcatMsg: "", price: "" },
             fieldsValid: { coursename: false, description: false },
             formValid: false,
             catValid: false,
             subcatValid: false,
             edit: false,
             courseId: 0,
-            editData: { coursename: "", description: "", catId: 0, subcatId: 0, courseImage: "" },
+            editData: { coursename: "", description: "", catId: 0, subcatId: 0, courseImage: "", price: "" },
             courseImage: [],
             showimage: false,
             displayImage: ""
@@ -43,7 +44,6 @@ class AddCourse extends Component {
     componentWillReceiveProps(nextProps, prevProps) {
         const { match: { params } } = this.props;
         const { subcategory } = nextProps;
-
         if (this.state.catChanged)
             this.setState({ editData: { ...this.state.editData, catId: subcategory[0].catId }, catChanged: false });
         else if (nextProps !== prevProps) {
@@ -56,7 +56,8 @@ class AddCourse extends Component {
                             coursename: courses[0].coursename,
                             description: courses[0].description,
                             catId: parseInt(courses[0].catId),
-                            subcatId: parseInt(courses[0].subcatId)
+                            subcatId: parseInt(courses[0].subcatId),
+                            price: parseInt(courses[0].price)
                         },
                         courseImage: courses[0].courseImage,
                         displayImage: "",
@@ -103,6 +104,10 @@ class AddCourse extends Component {
                 fieldValidation.description = value.match(/^[a-zA-Z- ,&0-9+]+$/i);
                 fieldValidationErrors.description = fieldValidation.description ? '' : ' Invalid description'
                 break;
+            case 'price':
+                fieldValidation.price = value.match(/^[0-9]+$/i);
+                fieldValidationErrors.price = fieldValidation.price ? '' : ' Invalid price'
+                break;
             default:
                 break;
         }
@@ -115,7 +120,8 @@ class AddCourse extends Component {
     validateForm() {
         this.setState({
             formValid: this.state.fieldsValid.coursename &&
-                this.state.fieldsValid.description
+                this.state.fieldsValid.description &&
+                this.state.fieldsValid.price
         });
     }
 
@@ -147,6 +153,13 @@ class AddCourse extends Component {
 
     btnAdd(e) {
         e.preventDefault();
+        if (this.state.price === 0)
+            this.setState({
+                fieldsErrors: {
+                    ...this.state.fieldsErrors,
+                    price: "* Price Required"
+                }
+            })
         if (this.state.subcatId === 0)
             this.setState({
                 fieldsErrors: {
@@ -168,6 +181,14 @@ class AddCourse extends Component {
                     description: "* Description Required"
                 }
             })
+        else if (this.state.description.trim() === "") {
+            this.setState({
+                fieldsErrors: {
+                    ...this.state.fieldsErrors,
+                    description: "* Invalid description "
+                }
+            })
+        }
         if (this.state.coursename === "")
             this.setState({
                 fieldsErrors: {
@@ -175,11 +196,20 @@ class AddCourse extends Component {
                     coursename: "* Course Name Required"
                 }
             })
+        else if (this.state.coursename.trim() === "") {
+            this.setState({
+                fieldsErrors: {
+                    ...this.state.fieldsErrors,
+                    coursename: "* Invalid Course Name "
+                }
+            })
+        }
         let formdata = new FormData();
         formdata.append('coursename', this.state.coursename);
         formdata.append('description', this.state.description);
         formdata.append('catId', this.state.catId);
         formdata.append('subcatId', this.state.subcatId);
+        formdata.append('price', this.state.price);
         formdata.append('userId', parseInt(localStorage.getItem("userId")));
         if (this.state.courseImage && this.state.showimage) {
             formdata.append('courseImage', this.state.courseImage[0]);
@@ -191,11 +221,12 @@ class AddCourse extends Component {
         }
     }
 
-    btnEdit(e) {
+    btnEdit(e) {       
         let coursename = this.state.coursename;
         let description = this.state.description;
         let catId = this.state.catId;
         let subcatId = this.state.subcatId;
+        let price = this.state.price;
         if (this.state.coursename === "") {
             coursename = this.state.editData.coursename
         }
@@ -208,12 +239,15 @@ class AddCourse extends Component {
         if (this.state.subcatId === 0) {
             subcatId = this.state.editData.subcatId
         }
-
+        if (this.state.price === 0) {
+            price = this.state.editData.price
+        }
         let formdata = new FormData();
         formdata.append('coursename', coursename);
         formdata.append('description', description);
         formdata.append('catId', parseInt(catId));
         formdata.append('subcatId', parseInt(subcatId));
+        formdata.append('price', parseInt(price));
         if (this.state.showimage === false && this.state.displayImage === "") {
             formdata.append("courseImage", "defaultCourseImage.png");
         }
@@ -275,6 +309,11 @@ class AddCourse extends Component {
                         {!this.state.subcatValid ? <span className="chperror">{this.state.fieldsErrors.subcatMsg}</span> : ""}
                     </FormGroup>
                     <FormGroup>
+                        <Label className="chphead">Amount for your course?</Label>
+                        <Input type="text" name="price" placeholder="Price" onChange={this.inputHandler.bind(this)} defaultValue={this.state.editData.price} />
+                        <span className="chperror">{this.state.fieldsErrors.price}</span>
+                    </FormGroup>
+                    <FormGroup>
                         <Label className="chphead">You may have an image for your course(Optional)!!</Label>
                         {(this.state.showimage && this.state.courseImage !== "defaultCourseImage.png") ?
                             (this.state.editData.length > 0 || this.state.displayImage === "") ?
@@ -325,7 +364,7 @@ const mapDispatchToProps = (dispatch) => ({
     action: {
         category: bindActionCreators(catAction, dispatch),
         subcategory: bindActionCreators(subcatAction, dispatch),
-        course: bindActionCreators(courseAction, dispatch),
+        course: bindActionCreators(courseAction, dispatch)
     }
 })
 

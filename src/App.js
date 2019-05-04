@@ -13,6 +13,7 @@ import Cart from "./component/Cart/myCart";
 import BoughtCourse from "./component/BoughtCourse/boughtCourse";
 import AddChapter from "./component/Instructor/Course/addChapter";
 import SearchDisplay from "./component/Search/SearchDisplay";
+import Wishlist from './component/Wishlist/wishlist';
 
 class App extends Component {
   render() {
@@ -30,6 +31,7 @@ class App extends Component {
           <CRoute path="/boughtCourse" exact component={BoughtCourse} />
           <CRoute path="/searchData/:courseId" exact component={SearchDisplay} />
           <CRoute path="/exploreCourse/:courseId" exact component={ExploreCourse} />
+          <CRoute path="/wishlist" exact component={Wishlist} />
         </Switch>
       </div>
     );
